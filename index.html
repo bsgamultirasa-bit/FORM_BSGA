@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSGA MRP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            /* Background Mesh Gradient yang bergerak */
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Mencegah scrollbar karena partikel */
+            padding: 20px;
+            position: relative; /* Penting untuk partikel */
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- PARTIKEL CAHAYA (CSS Only) --- */
+        .particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Di belakang konten */
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: particleAnimation infinite linear;
+            filter: blur(1px); /* Efek bokeh lembut */
+        }
+
+        /* Variasi ukuran dan posisi partikel */
+        .particle:nth-child(1) { width: 10px; height: 10px; left: 10%; animation-duration: 20s; animation-delay: -2s; opacity: 0.5; }
+        .particle:nth-child(2) { width: 15px; height: 15px; left: 20%; animation-duration: 25s; animation-delay: -5s; opacity: 0.7; }
+        .particle:nth-child(3) { width: 8px; height: 8px; left: 35%; animation-duration: 18s; animation-delay: -1s; opacity: 0.4; }
+        .particle:nth-child(4) { width: 12px; height: 12px; left: 50%; animation-duration: 22s; animation-delay: -10s; opacity: 0.6; }
+        .particle:nth-child(5) { width: 20px; height: 20px; left: 65%; animation-duration: 30s; animation-delay: -8s; opacity: 0.8; }
+        .particle:nth-child(6) { width: 10px; height: 10px; left: 80%; animation-duration: 21s; animation-delay: -3s; opacity: 0.5; }
+        .particle:nth-child(7) { width: 14px; height: 14px; left: 90%; animation-duration: 26s; animation-delay: -15s; opacity: 0.7; }
+        .particle:nth-child(8) { width: 9px; height: 9px; left: 5%; animation-duration: 19s; animation-delay: -6s; opacity: 0.4; }
+        .particle:nth-child(9) { width: 16px; height: 16px; left: 75%; animation-duration: 28s; animation-delay: -12s; opacity: 0.6; }
+        .particle:nth-child(10) { width: 11px; height: 11px; left: 45%; animation-duration: 23s; animation-delay: -4s; opacity: 0.5; }
+
+        @keyframes particleAnimation {
+            0% { transform: translateY(110vh) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- NOTIFIKASI MELAYANG --- */
+        .notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 350px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 15px 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .notification.show { top: 25px; }
+
+        .notif-icon {
+            background: #ffffff;
+            color: rgb(255, 255, 255);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notif-text b { display: block; font-size: 0.85rem; color: #5a5a5a; }
+        .notif-text span { font-size: 0.75rem; color: #666; }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 40px;
+            padding: 50px 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            z-index: 10; /* Di depan partikel */
+            position: relative;
+        }
+
+        .profile-img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            object-fit: cover;
+        }
+
+        h1 { color: #000000; font-size: 1.6rem; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .bio { color: rgba(0, 0, 0, 0.9); font-size: 0.9rem; margin-bottom: 35px; }
+
+        /* --- LINKS STYLE --- */
+        .links-container { display: flex; flex-direction: column; gap: 15px; }
+
+        .link-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 18px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: #4b4b4b;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .link-item i {
+            font-size: 1.0rem;
+            position: absolute;
+            left: 20px;
+        }
+
+        .link-item span { width: 100%; text-align: center; }
+
+        .link-item:hover {
+            transform: translateY(-3px);
+            background: #fff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            margin-top: 50px;
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="particle-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="notification" id="notif">
+        <div class="notif-icon"><i class="fas fa-sparkles"></i></div>
+        <div class="notif-text">
+            <b> ✨ WELCOME ✨</b>
+            <span>HAVE AN AICE DAY</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <img src="https://yt3.googleusercontent.com/kIW6RzLeZKNNPKSdTShkDsli_QJG7UwKNjkJw6KEuzqy9-hKS01PAFmj0rDs9BuLYLmyRMFQ=s900-c-k-c0x00ffffff-no-rj" class="profile-img">
+        
+        <h1>BSGA</h1>
+        <p class="bio">Silahkan pilih Form sesuai kebutuhan</p>
+
+        <div class="links-container">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScfz7LMfPFaa3Kx1eq3ww_jKNnM9Fl4IfMUXHOhg28ZGd3bHA/viewform" class="link-item">
+                <i class="fa fa-desktop" style="color: #E1306C;"></i>
+                <span>Form Keluhan/Trouble Komputer</span>
+            </a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSft9rJQCUvDU5Ts-867nwAMRGu3UFPsqg6tQDx3oWj8um4cKQ/viewform" class="link-item">
+                <i class="fa fa-cog" style="color: #000;"></i>
+                <span>Form Khusus Operasional</span>
+            </a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSce0cfKeYN4dDpp9f_F7OoBFI4oeMfL5zmp_8ksdR4-v7bg1w/viewform" class="link-item">
+                <i class="fa fa-building" style="color: #25D366;"></i>
+                <span>Form Permintaan Tembesu</span>
+            </a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfEXxWT_NKDxIMy-T7Z41bM71I2wWysbsXqgMUTcFzttRnV_A/viewform" class="link-item">
+                <i class="fa fa-file" style="color: #6c5ce7;"></i>
+                <span>Form Permintaan Cabang</span>
+            </a>
+            
+        </div>
+
+        <footer>BS&GA &bull; 2026</footer>
+    </div>
+
+    <script>
+        // Memunculkan notifikasi setelah 0.5 detik
+        setTimeout(() => {
+            document.getElementById('notif').classList.add('show');
+        }, 500);
+
+        // Menghilangkan notifikasi otomatis setelah 3.5 detik
+        setTimeout(() => {
+            document.getElementById('notif').classList.remove('show');
+        }, 3500);
+    </script>
+</body>
+</html>
